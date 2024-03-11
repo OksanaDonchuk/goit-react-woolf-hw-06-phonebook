@@ -1,21 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import css from './ContactForm.module.css';
 import { useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'store/contactsSlise';
+import { nanoid } from '@reduxjs/toolkit';
 
-const ContactForm = ({ onAddContact }) => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+const ContactForm = () => {
+  const [contact, setContact] = useState({ name: '', number: '' });
+  const { name, number } = contact;
+  const { contacts } = useSelector(state => state.contacts);
+  const dispatch = useDispatch();
 
   const handleChange = event => {
     const { name, value } = event.target;
-    name === 'name' ? setName(value) : setNumber(value);
+    setContact(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = event => {
     event.preventDefault();
-    onAddContact(name, number);
-    setName('');
-    setNumber('');
+    const newContact = { id: nanoid(), name, number };
+    contacts.some(contact => contact.name.toLowerCase() === name.toLowerCase())
+      ? alert(`${name} is already in contacts`)
+      : dispatch(addContact(newContact));
+    setContact({ name: '', number: '' });
   };
 
   const refObj = useRef();
