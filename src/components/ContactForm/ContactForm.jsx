@@ -4,11 +4,12 @@ import { useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'store/contactsSlise';
 import { nanoid } from '@reduxjs/toolkit';
+import { getContacts } from 'store/selectors';
 
 const ContactForm = () => {
   const [contact, setContact] = useState({ name: '', number: '' });
   const { name, number } = contact;
-  const { contacts } = useSelector(state => state.contacts);
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const handleChange = event => {
